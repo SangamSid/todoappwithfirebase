@@ -8,6 +8,7 @@ import Button from "./Button";
 export default function Header() {
   const [modalOpen, setModalOpen] = useState(false);
   const [todos, setTodos] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const input = useRef();
 
   const styles =
@@ -36,9 +37,15 @@ export default function Header() {
     setTodos((prevTodos) => prevTodos.filter((_, i) => i !== index));
   }
 
+  function editTask(e, index) {
+    e.preventDefault();
+    setIsEditing(true);
+    setModalOpen(true);
+  }
+
   return (
     <>
-      <div className="m-auto container max-w-2xl max-h-5xl w-11/12 font-medium text-cyan-950">
+      <div className="m-auto container max-w-2xl w-11/12 font-medium text-cyan-950">
         <div className="m-auto text-slate-100 ">
           <div className="text-center font-extrabold text-3xl text-cyan-950 mb-6 flex justify-center mt-6">
             <span className="mr-4 mt-1">
@@ -54,10 +61,19 @@ export default function Header() {
           <div>
             {modalOpen && (
               <Modal
-                addTask={addTask}
+                method={addTask}
                 closeModal={closeModal}
                 ref={input}
+                title="Add Task"
               ></Modal>
+            )}
+            {isEditing && modalOpen && (
+              <Modal
+                method={editTask}
+                closeModal={closeModal}
+                ref={input}
+                title="Edit Task"
+              />
             )}
           </div>
         </div>
@@ -71,6 +87,7 @@ export default function Header() {
                 key={index}
                 todo={todo}
                 removeTodo={() => removeTask(index)}
+                edit={editTask}
               />
             ))}
           </ul>
