@@ -1,15 +1,14 @@
 import { useState, useRef } from "react";
 import Modal from "./Modal";
 import Todo from "./Todo";
-
-import { HiClipboardDocumentList } from "react-icons/hi2";
 import Button from "./Button";
+import { HiClipboardDocumentList } from "react-icons/hi2";
 
 export default function Header() {
   const [modalOpen, setModalOpen] = useState(false);
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const input = useRef();
+  const [editTaskIndex, setEditTaskIndex] = useState(null);
 
   const styles =
     "border-2 py-2 px-10 rounded-md bg-[#29303d] hover:bg-[#29305d] mb-2 mr-2";
@@ -20,16 +19,13 @@ export default function Header() {
 
   function closeModal() {
     setModalOpen(false);
+    setIsEditing(false);
   }
 
-  function addTask(e) {
-    e.preventDefault();
-    const newTodo = input.current.value;
-
-    if (newTodo) {
-      setTodos([...todos, newTodo]);
+  function addTask(newTask) {
+    if (newTask) {
+      setTodos([...todos, newTask]);
       closeModal();
-      input.current.value = "";
     }
   }
 
@@ -37,10 +33,19 @@ export default function Header() {
     setTodos((prevTodos) => prevTodos.filter((_, i) => i !== index));
   }
 
-  function editTask(e, index) {
-    e.preventDefault();
+  function editTask(index) {
     setIsEditing(true);
     setModalOpen(true);
+    setEditTaskIndex(index);
+  }
+
+  function handleEdit(editedTask) {
+    const updatedTasks = [...todos];
+    updatedTasks[editTaskIndex] = editedTask;
+    setTodos(updatedTasks);
+    setIsEditing(false);
+    setModalOpen(false);
+    setEditTaskIndex(null);
   }
 
   return (
@@ -61,19 +66,11 @@ export default function Header() {
           <div>
             {modalOpen && (
               <Modal
-                method={addTask}
+                onAdd={addTask}
                 closeModal={closeModal}
-                ref={input}
                 title="Add Task"
+                todo={todos}
               ></Modal>
-            )}
-            {isEditing && modalOpen && (
-              <Modal
-                method={editTask}
-                closeModal={closeModal}
-                ref={input}
-                title="Edit Task"
-              />
             )}
           </div>
         </div>
@@ -87,9 +84,18 @@ export default function Header() {
                 key={index}
                 todo={todo}
                 removeTodo={() => removeTask(index)}
-                edit={editTask}
+                edit={() => editTask(index)}
               />
             ))}
+            {isEditing && modalOpen && (
+              <Modal
+                closeModal={closeModal}
+                title="Edit Task"
+                onEdit={handleEdit}
+                todo={todos}
+                isEditing={isEditing}
+              />
+            )}
           </ul>
         </div>
       </div>
