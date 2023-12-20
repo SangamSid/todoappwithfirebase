@@ -12,6 +12,8 @@ export default function Header() {
 
   const styles =
     "border-2 py-2 px-10 rounded-md bg-[#29303d] hover:bg-[#29305d] mb-2 mr-2";
+  const center = "flex justify-center";
+  const between = "flex justify-between";
 
   function openModal() {
     setModalOpen(true);
@@ -48,6 +50,10 @@ export default function Header() {
     setEditTaskIndex(null);
   }
 
+  function removeAllTodos() {
+    setTodos([]);
+  }
+
   return (
     <>
       <div className="m-auto container max-w-2xl w-11/12 font-medium text-cyan-950">
@@ -58,10 +64,15 @@ export default function Header() {
             </span>
             <h1>TODO LIST</h1>
           </div>
-          <div className="display: flex justify-center mx-10">
+          <div className={todos.length > 0 ? between : center}>
             <Button onClick={openModal} className={styles}>
               Add Todo
             </Button>
+            {todos.length > 0 && (
+              <Button onClick={removeAllTodos} className={styles}>
+                Delete All
+              </Button>
+            )}
           </div>
           <div>
             {modalOpen && (
@@ -74,8 +85,8 @@ export default function Header() {
             )}
           </div>
         </div>
-        <div className="mx-10 my-5 ">
-          <ul className="rounded-md border-2 p-5 bg-slate-200">
+        <div className=" my-5">
+          <ul className="rounded-md p-7 bg-slate-400">
             {todos.length === 0 && (
               <p className="text-center text-lg ">NO TODOS</p>
             )}

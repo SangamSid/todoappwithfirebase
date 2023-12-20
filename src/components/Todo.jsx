@@ -9,7 +9,7 @@ export default function Todo({ todo, removeTodo, index, edit }) {
   return (
     <li
       key={index}
-      className="rounded-md border-2 m-2 p-2 bg-white w-full end-0 flex items-center justify-between"
+      className="rounded-md border-2 p-1 mb-1 bg-white w-full end-0 flex items-center justify-between"
     >
       <div>{todo}</div>
       <div className="flex space-x-1">
