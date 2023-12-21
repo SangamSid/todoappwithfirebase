@@ -1,6 +1,6 @@
 import Button from "./Button";
 import { useContext } from "react";
-import { TodoContext } from "../store/todos-context";
+import { TodoContext } from "../context/todos-context";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 
 export default function Header() {

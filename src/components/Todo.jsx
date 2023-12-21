@@ -1,7 +1,7 @@
 import React from "react";
 import TodoItem from "./TodoItem";
 import Modal from "./Modal";
-import { TodoContext } from "../store/todos-context";
+import { TodoContext } from "../context/todos-context";
 import { useContext } from "react";
 
 export default function Todo() {
@@ -12,7 +12,7 @@ export default function Todo() {
     <div className="m-auto container max-w-2xl">
       <>{modalOpen && <Modal title="Add Task"></Modal>}</>
       <div className="my-5">
-        <ul className="rounded-md p-7 bg-slate-400">
+        <ul className="rounded-md p-7 bg-slate-200">
           {todos.length === 0 && (
             <p className="text-center text-lg">NO TODOS</p>
           )}
