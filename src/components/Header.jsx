@@ -3,13 +3,13 @@ import { useContext } from "react";
 import { TodoContext } from "../store/todos-context";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 
-export default function Header({ openModal }) {
+export default function Header() {
   const styles =
     "border-2 py-2 px-10 rounded-md bg-[#29303d] hover:bg-[#29305d] ";
   const center = "flex justify-center";
   const between = "flex justify-between";
 
-  const { todos, removeTodos } = useContext(TodoContext);
+  const { todos, removeTodos, openModal } = useContext(TodoContext);
 
   return (
     <>

@@ -4,7 +4,7 @@ import Modal from "./Modal";
 import { TodoContext } from "../store/todos-context";
 import { useContext } from "react";
 
-export default function Todo({}) {
+export default function Todo() {
   const { todos, modalOpen, isEditing, removeTodo, modalIsEditing } =
     useContext(TodoContext);
 

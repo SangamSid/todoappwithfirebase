@@ -63,7 +63,7 @@ export default function App() {
 
   return (
     <TodoContext.Provider value={ctxValue}>
-      <Header openModal={openModal}></Header>
+      <Header></Header>
       <Todo />
     </TodoContext.Provider>
   );
