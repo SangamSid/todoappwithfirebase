@@ -1,25 +1,32 @@
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import React from "react";
+import TodoItem from "./TodoItem";
+import Modal from "./Modal";
+import { TodoContext } from "../store/todos-context";
+import { useContext } from "react";
 
-import Button from "./Button";
-
-export default function Todo({ todo, removeTodo, index, edit }) {
-  const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
+export default function Todo({}) {
+  const { todos, modalOpen, isEditing, removeTodo, modalIsEditing } =
+    useContext(TodoContext);
 
   return (
-    <li
-      key={index}
-      className="rounded-md border-2 p-1 mb-1 bg-white w-full end-0 flex items-center justify-between"
-    >
-      <div>{todo}</div>
-      <div className="flex space-x-1">
-        <Button onClick={removeTodo} className={styles}>
-          <MdDelete />
-        </Button>
-        <Button onClick={edit} className={styles}>
-          <FaEdit />
-        </Button>
+    <div className="m-auto container max-w-2xl">
+      <>{modalOpen && <Modal title="Add Task"></Modal>}</>
+      <div className="my-5">
+        <ul className="rounded-md p-7 bg-slate-400">
+          {todos.length === 0 && (
+            <p className="text-center text-lg">NO TODOS</p>
+          )}
+          {todos.map((todo, index) => (
+            <TodoItem
+              key={index}
+              todo={todo}
+              removeTodo={() => removeTodo(index)}
+              edit={() => modalIsEditing(index)}
+            />
+          ))}
+          {isEditing && modalOpen && <Modal title="Edit Task" />}
+        </ul>
       </div>
-    </li>
+    </div>
   );
 }
