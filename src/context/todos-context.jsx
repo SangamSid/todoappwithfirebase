@@ -4,6 +4,7 @@ export const TodoContext = createContext({
   todos: [],
   modalOpen: false,
   isEditing: false,
+  selectedDates: {},
   addTodo: () => {},
   removeTodo: () => {},
   editTask: () => {},
@@ -11,7 +12,8 @@ export const TodoContext = createContext({
   removeTodos: () => {},
   openModal: () => {},
   closeModal: () => {},
-  setStartDate: () => {},
+  dateChange: () => {},
+  setTodos: () => {},
 });
 
 export default function TodoContextProvider({ children }) {
@@ -19,7 +21,9 @@ export default function TodoContextProvider({ children }) {
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editTaskIndex, setEditTaskIndex] = useState(null);
-  const [startDate, setStartDate] = useState(new Date());
+  const [selectedDates, setSelectedDates] = useState({
+    id: new Date(),
+  });
 
   function openModal() {
     setModalOpen(true);
@@ -35,8 +39,8 @@ export default function TodoContextProvider({ children }) {
     closeModal();
   }
 
-  function removeTask(index) {
-    setTodos((prevTodos) => prevTodos.filter((_, i) => i !== index));
+  function removeTask(todo) {
+    setTodos(todos.filter((t) => t.id !== todo.id));
   }
 
   function editTask(index) {
@@ -58,12 +62,18 @@ export default function TodoContextProvider({ children }) {
     setTodos([]);
   }
 
+  function handleDateChange(taskId, date) {
+    setSelectedDates({
+      ...selectedDates,
+      [taskId]: date,
+    });
+  }
+
   const ctxValue = {
     todos,
     modalOpen,
     isEditing,
-    startDate,
-    setStartDate,
+    selectedDates,
     addTodo: addTask,
     removeTodo: removeTask,
     editTask: handleEdit,
@@ -71,6 +81,8 @@ export default function TodoContextProvider({ children }) {
     removeTodos: removeAllTodos,
     openModal,
     closeModal,
+    dateChange: handleDateChange,
+    setTodos,
   };
 
   return (

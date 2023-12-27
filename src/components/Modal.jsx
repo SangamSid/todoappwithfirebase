@@ -39,7 +39,7 @@ export default function Modal({ title }) {
   return (
     <div className="w-screen h-screen z-[1000] fixed left-0 top-0 flex items-center justify-center opacity-100 bg-opacity-50 bg-gray-800 ">
       <div className="bg-[#ecedf6] w-[450px] h-[230px] m-auto relative font-sans rounded-lg flex items-center justify-center">
-        <dialog className="w-[100%] h-[100%] block text-[#29305d] p-5 rounded-md bg-zinc-400">
+        <dialog className="w-[100%] h-[100%] block text-[#29305d] p-5 rounded-md bg-[#60728E]">
           <div>
             <form onSubmit={isEditing ? handleEditTask : handleAddTask}>
               <h1 className="text-xl mb-8 uppercase">{title}</h1>

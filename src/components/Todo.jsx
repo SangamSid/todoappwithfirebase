@@ -5,7 +5,7 @@ import { TodoContext } from "../context/todos-context";
 import { useContext } from "react";
 
 export default function Todo() {
-  const { todos, modalOpen, isEditing, removeTodo, modalIsEditing } =
+  const { todos, modalOpen, isEditing, removeTodo, modalIsEditing, setTodos } =
     useContext(TodoContext);
 
   return (
@@ -22,25 +22,24 @@ export default function Todo() {
               <th>ACTION</th>
             </tr>
           </thead>
+
           <tbody>
-            {todos.length === 0 && (
-              <tr>
-                <td>
-                  <p className="text-center text-lg">NO TODOS</p>
-                </td>
-              </tr>
-            )}
             {todos.map((todo) => (
               <TodoItem
                 key={todo.id}
                 todo={todo}
-                removeTodo={() => removeTodo(id)}
-                edit={() => modalIsEditing(id)}
+                removeTodo={() => removeTodo(todo)}
+                edit={() => modalIsEditing(todo.id)}
               />
             ))}
             {isEditing && modalOpen && <Modal title="Edit Task" />}
           </tbody>
         </table>
+        {todos.length === 0 && (
+          <div className="w-full h-10 bg-[#1e293b] text-[#697a94] flex items-center">
+            <p className="text-center text-lg m-auto">NO TODOS</p>
+          </div>
+        )}
       </div>
     </div>
   );

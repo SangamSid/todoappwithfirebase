@@ -1,7 +1,7 @@
 const getOptionColor = (optionValue) => {
   switch (optionValue) {
     case "Not started":
-      return "#3d4b5f"; // Base
+      return "#697a94"; // Base
     case "In progress":
       return "#6495ED"; // Blue
     case "Skipped":
@@ -9,9 +9,16 @@ const getOptionColor = (optionValue) => {
     case "Done":
       return "#00AB34"; // Green
     default:
-      return "#3d4b5f"; // Default color
+      return "#697a94"; // Default color
   }
 };
+
+export const options = [
+  { value: "Not started", label: "Not started" },
+  { value: "In progress", label: "In progress" },
+  { value: "Skipped", label: "Skipped" },
+  { value: "Done", label: "Done" },
+];
 
 const customStyles = {
   control: (provided, state) => ({
@@ -45,7 +52,7 @@ const customStyles = {
   }),
   placeholder: (provided, state) => ({
     ...provided,
-    color: "#3d4b5f", // Set the color of the placeholder
+    color: "#697a94", // Set the color of the placeholder
   }),
   dropdownIndicator: (provided, state) => ({
     ...provided,
