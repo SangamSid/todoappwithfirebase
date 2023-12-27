@@ -11,6 +11,7 @@ export const TodoContext = createContext({
   removeTodos: () => {},
   openModal: () => {},
   closeModal: () => {},
+  setStartDate: () => {},
 });
 
 export default function TodoContextProvider({ children }) {
@@ -18,6 +19,7 @@ export default function TodoContextProvider({ children }) {
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editTaskIndex, setEditTaskIndex] = useState(null);
+  const [startDate, setStartDate] = useState(new Date());
 
   function openModal() {
     setModalOpen(true);
@@ -28,11 +30,9 @@ export default function TodoContextProvider({ children }) {
     setIsEditing(false);
   }
 
-  function addTask(newTask) {
-    if (newTask) {
-      setTodos([...todos, newTask]);
-      closeModal();
-    }
+  function addTask(task) {
+    setTodos([...todos, task]);
+    closeModal();
   }
 
   function removeTask(index) {
@@ -62,6 +62,8 @@ export default function TodoContextProvider({ children }) {
     todos,
     modalOpen,
     isEditing,
+    startDate,
+    setStartDate,
     addTodo: addTask,
     removeTodo: removeTask,
     editTask: handleEdit,

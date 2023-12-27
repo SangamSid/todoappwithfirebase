@@ -9,23 +9,38 @@ export default function Todo() {
     useContext(TodoContext);
 
   return (
+    // <div className="m-auto container max-w-2xl">
     <div className="m-auto container max-w-2xl">
       <>{modalOpen && <Modal title="Add Task"></Modal>}</>
       <div className="my-5">
-        <ul className="rounded-md p-7 bg-slate-200">
-          {todos.length === 0 && (
-            <p className="text-center text-lg">NO TODOS</p>
-          )}
-          {todos.map((todo, index) => (
-            <TodoItem
-              key={index}
-              todo={todo}
-              removeTodo={() => removeTodo(index)}
-              edit={() => modalIsEditing(index)}
-            />
-          ))}
-          {isEditing && modalOpen && <Modal title="Edit Task" />}
-        </ul>
+        <table className="rounded-md p-7 bg-slate-200">
+          <thead>
+            <tr>
+              <th>TASK</th>
+              <th>STATUS</th>
+              <th>DUE DATE</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.length === 0 && (
+              <tr>
+                <td>
+                  <p className="text-center text-lg">NO TODOS</p>
+                </td>
+              </tr>
+            )}
+            {todos.map((todo) => (
+              <TodoItem
+                key={todo.id}
+                todo={todo}
+                removeTodo={() => removeTodo(id)}
+                edit={() => modalIsEditing(id)}
+              />
+            ))}
+            {isEditing && modalOpen && <Modal title="Edit Task" />}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -11,15 +11,20 @@ export default function Modal({ title }) {
     useContext(TodoContext);
 
   const [editedTask, setEditedTask] = useState(todos);
-  const [newTask, setNewTask] = useState(todos);
+  const [taskName, setTaskName] = useState("");
 
   function handleAddInputChange(e) {
-    setNewTask(e.target.value);
+    setTaskName(e.target.value);
   }
 
   function handleAddTask(e) {
     e.preventDefault();
-    addTodo(newTask);
+    const todo = {
+      id: Math.floor(Math.random() * 100),
+      task: taskName,
+      date: new Date(),
+    };
+    addTodo(todo);
   }
 
   function handleEditInputChange(e) {
