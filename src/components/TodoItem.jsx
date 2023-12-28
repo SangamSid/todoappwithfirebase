@@ -13,7 +13,7 @@ import { TodoContext } from "../context/todos-context";
 export default function TodoItem({ todo, removeTodo, edit }) {
   const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
   const { dateChange, selectedDates } = useContext(TodoContext);
-  console.log(todo);
+
   return (
     <>
       <tr key={todo.id}>

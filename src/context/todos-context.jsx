@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const TodoContext = createContext({
   todos: [],
@@ -20,7 +21,6 @@ export default function TodoContextProvider({ children }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [editTaskIndex, setEditTaskIndex] = useState(null);
   const [selectedDates, setSelectedDates] = useState({
     id: new Date(),
   });
@@ -43,19 +43,20 @@ export default function TodoContextProvider({ children }) {
     setTodos(todos.filter((t) => t.id !== todo.id));
   }
 
-  function editTask(index) {
+  function modalIsEditing() {
     setIsEditing(true);
     setModalOpen(true);
-    setEditTaskIndex(index);
   }
 
-  function handleEdit(editedTask) {
-    const updatedTasks = [...todos];
-    updatedTasks[editTaskIndex] = editedTask;
-    setTodos(updatedTasks);
+  function editTask(todoId, editedTask) {
+    console.log("Editing todo with id:", todoId);
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === todoId ? { ...todo, task: editedTask } : todo
+      )
+    );
     setIsEditing(false);
     setModalOpen(false);
-    setEditTaskIndex(null);
   }
 
   function removeAllTodos() {
@@ -76,8 +77,8 @@ export default function TodoContextProvider({ children }) {
     selectedDates,
     addTodo: addTask,
     removeTodo: removeTask,
-    editTask: handleEdit,
-    modalIsEditing: editTask,
+    editTask,
+    modalIsEditing,
     removeTodos: removeAllTodos,
     openModal,
     closeModal,
