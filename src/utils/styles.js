@@ -52,7 +52,8 @@ const customStyles = {
   }),
   placeholder: (provided, state) => ({
     ...provided,
-    color: "#697a94", // Set the color of the placeholder
+    color: "#697a94",
+    text: "Not started",
   }),
   dropdownIndicator: (provided, state) => ({
     ...provided,

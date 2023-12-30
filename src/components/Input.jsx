@@ -1,6 +1,7 @@
-export default function Input({ handleEditOrAdd }) {
+export default function Input({ handleEditOrAdd, ival }) {
   return (
     <input
+      ref={ival}
       type="text"
       required
       name="title"

@@ -1,49 +1,50 @@
 import Button from "./Button";
 import Input from "./Input";
-import { useContext, useEffect, useCallback, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { TodoContext } from "../context/todos-context";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Modal({ title }) {
   const styles = "bg-[#29303d] hover:bg-[#29305d] font-bold rounded py-2 px-4 ";
 
-  const { addTodo, closeModal, editTask, isEditing } = useContext(TodoContext);
+  const {
+    addTodo,
+    closeModal,
+    editTask,
+    isEditing,
+    todoId,
+    todos,
+    editedTask,
+    setEditedTask,
+    setTodoId,
+    setTaskName,
+  } = useContext(TodoContext);
 
-  const [editedTask, setEditedTask] = useState("");
-  const [taskName, setTaskName] = useState("");
-  const [todoId, setTodoId] = useState(uuidv4());
+  const inputValue = useRef();
 
   useEffect(() => {
     if (!isEditing) {
       setTodoId(uuidv4());
     }
-  }, [isEditing]);
+  }, [isEditing, setTodoId]);
 
-  function handleAddInputChange(e) {
-    setTaskName(e.target.value);
+  function handleAddInputChange() {
+    setTaskName(inputValue.current.value);
   }
 
   function handleAddTask(e) {
     e.preventDefault();
-    const todo = {
-      id: todoId,
-      task: taskName,
-      date: new Date(),
-    };
-
-    addTodo(todo);
-    console.log(todo);
+    addTodo();
   }
 
-  function handleEditInputChange(e) {
-    setEditedTask(e.target.value);
-    console.log(todoId);
+  function handleEditInputChange() {
+    setEditedTask(inputValue.current.value);
   }
 
   function handleEditTask(e) {
     e.preventDefault();
     editTask(todoId, editedTask);
-    console.log(todoId);
+    console.log(todos);
   }
 
   return (
@@ -56,6 +57,7 @@ export default function Modal({ title }) {
               <label>
                 Title
                 <Input
+                  ival={inputValue}
                   handleEditOrAdd={
                     isEditing ? handleEditInputChange : handleAddInputChange
                   }

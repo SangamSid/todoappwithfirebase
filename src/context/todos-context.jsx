@@ -1,21 +1,31 @@
 import { createContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Button from "../components/Button";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 
 export const TodoContext = createContext({
   todos: [],
   modalOpen: false,
   isEditing: false,
+  taskName: "",
+  editedTask: "",
   selectedDates: {},
   addTodo: () => {},
   removeTodo: () => {},
   editTask: () => {},
   modalIsEditing: () => {},
-  removeTodos: () => {},
+  removeAllTodos: () => {},
   openModal: () => {},
   closeModal: () => {},
   dateChange: () => {},
   setTodos: () => {},
+  setTodoId: () => {},
+  setTaskName: () => {},
+  setEditedTask: () => {},
 });
+
+const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
 export default function TodoContextProvider({ children }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,6 +34,24 @@ export default function TodoContextProvider({ children }) {
   const [selectedDates, setSelectedDates] = useState({
     id: new Date(),
   });
+  const [todoId, setTodoId] = useState(uuidv4());
+  const [taskName, setTaskName] = useState("");
+  const [editedTask, setEditedTask] = useState("");
+  const todoObj = {
+    id: todoId,
+    task: taskName,
+    date: new Date(),
+    action: (
+      <>
+        <Button onClick={removeTodo} className={styles}>
+          <MdDelete />
+        </Button>
+        <Button onClick={modalIsEditing} className={styles}>
+          <FaEdit />
+        </Button>
+      </>
+    ),
+  };
 
   function openModal() {
     setModalOpen(true);
@@ -34,27 +62,32 @@ export default function TodoContextProvider({ children }) {
     setIsEditing(false);
   }
 
-  function addTask(task) {
-    setTodos([...todos, task]);
+  function addTodo() {
+    setTodos([...todos, todoObj]);
     closeModal();
   }
 
-  function removeTask(todo) {
+  function removeTodo(todo) {
     setTodos(todos.filter((t) => t.id !== todo.id));
   }
 
   function modalIsEditing() {
     setIsEditing(true);
     setModalOpen(true);
+    setTodoId(todoObj.id);
+    setEditedTask(todoObj.task);
+    console.log(todoObj.id);
   }
 
   function editTask(todoId, editedTask) {
     console.log("Editing todo with id:", todoId);
+
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === todoId ? { ...todo, task: editedTask } : todo
       )
     );
+
     setIsEditing(false);
     setModalOpen(false);
   }
@@ -63,7 +96,7 @@ export default function TodoContextProvider({ children }) {
     setTodos([]);
   }
 
-  function handleDateChange(taskId, date) {
+  function dateChange(taskId, date) {
     setSelectedDates({
       ...selectedDates,
       [taskId]: date,
@@ -74,16 +107,22 @@ export default function TodoContextProvider({ children }) {
     todos,
     modalOpen,
     isEditing,
+    taskName,
+    editedTask,
     selectedDates,
-    addTodo: addTask,
-    removeTodo: removeTask,
+    addTodo,
+    removeTodo,
     editTask,
     modalIsEditing,
-    removeTodos: removeAllTodos,
+    removeAllTodos,
     openModal,
     closeModal,
-    dateChange: handleDateChange,
+    dateChange,
     setTodos,
+    todoId,
+    setTodoId,
+    setTaskName,
+    setEditedTask,
   };
 
   return (
