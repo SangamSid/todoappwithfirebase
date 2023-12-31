@@ -3,10 +3,10 @@ import TodoItem from "./TodoItem";
 import Modal from "./Modal";
 import { TodoContext } from "../context/todos-context";
 import { useContext } from "react";
+import FilterModal from "./FilterModal";
 
 export default function Todo() {
-  const { todos, modalOpen, isEditing, removeTodo, modalIsEditing } =
-    useContext(TodoContext);
+  const { todos, modalOpen, isEditing, isFiltering } = useContext(TodoContext);
 
   return (
     // <div className="m-auto container max-w-2xl">
@@ -24,12 +24,7 @@ export default function Todo() {
           </thead>
           <tbody>
             {todos.map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                removeTodo={() => removeTodo(todo)}
-                edit={modalIsEditing}
-              />
+              <TodoItem key={todo.id} todo={todo} />
             ))}
           </tbody>
         </table>
@@ -39,6 +34,7 @@ export default function Todo() {
             <p className="text-center text-lg m-auto">NO TODOS</p>
           </div>
         )}
+        {isFiltering && <FilterModal></FilterModal>}
       </div>
     </div>
   );

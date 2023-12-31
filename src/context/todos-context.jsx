@@ -8,6 +8,7 @@ export const TodoContext = createContext({
   todos: [],
   modalOpen: false,
   isEditing: false,
+  isFiltering: false,
   taskName: "",
   editedTask: "",
   selectedDates: {},
@@ -23,12 +24,14 @@ export const TodoContext = createContext({
   setTodoId: () => {},
   setTaskName: () => {},
   setEditedTask: () => {},
+  modalIsFiltering: () => {},
 });
 
 const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
 export default function TodoContextProvider({ children }) {
   const [modalOpen, setModalOpen] = useState(false);
+
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedDates, setSelectedDates] = useState({
@@ -37,6 +40,12 @@ export default function TodoContextProvider({ children }) {
   const [todoId, setTodoId] = useState(uuidv4());
   const [taskName, setTaskName] = useState("");
   const [editedTask, setEditedTask] = useState("");
+  const [isFiltering, setIsFiltering] = useState(false);
+
+  function modalIsFiltering() {
+    setIsFiltering(true);
+  }
+
   const todoObj = {
     id: todoId,
     task: taskName,
@@ -60,6 +69,7 @@ export default function TodoContextProvider({ children }) {
   function closeModal() {
     setModalOpen(false);
     setIsEditing(false);
+    setIsFiltering(false);
   }
 
   function addTodo() {
@@ -81,13 +91,11 @@ export default function TodoContextProvider({ children }) {
 
   function editTask(todoId, editedTask) {
     console.log("Editing todo with id:", todoId);
-
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === todoId ? { ...todo, task: editedTask } : todo
       )
     );
-
     setIsEditing(false);
     setModalOpen(false);
   }
@@ -107,6 +115,7 @@ export default function TodoContextProvider({ children }) {
     todos,
     modalOpen,
     isEditing,
+    isFiltering,
     taskName,
     editedTask,
     selectedDates,
@@ -123,6 +132,7 @@ export default function TodoContextProvider({ children }) {
     setTodoId,
     setTaskName,
     setEditedTask,
+    modalIsFiltering,
   };
 
   return (

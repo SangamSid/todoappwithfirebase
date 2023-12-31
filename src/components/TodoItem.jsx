@@ -1,7 +1,4 @@
 import React from "react";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
-import Button from "./Button";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
@@ -11,7 +8,7 @@ import { options } from "../utils/styles";
 import { useContext } from "react";
 import { TodoContext } from "../context/todos-context";
 
-export default function TodoItem({ todo, removeTodo, edit }) {
+export default function TodoItem({ todo }) {
   const { dateChange, selectedDates } = useContext(TodoContext);
   return (
     <>
