@@ -31,7 +31,6 @@ const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
 export default function TodoContextProvider({ children }) {
   const [modalOpen, setModalOpen] = useState(false);
-
   const [todos, setTodos] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedDates, setSelectedDates] = useState({

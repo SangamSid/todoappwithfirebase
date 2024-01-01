@@ -20,6 +20,14 @@ export const options = [
   { value: "Done", label: "Done" },
 ];
 
+export const filterOptions = [
+  { value: "All", label: "All" },
+  { value: "Not started", label: "Not started" },
+  { value: "In progress", label: "In progress" },
+  { value: "Skipped", label: "Skipped" },
+  { value: "Done", label: "Done" },
+];
+
 const customStyles = {
   control: (provided, state) => ({
     ...provided,

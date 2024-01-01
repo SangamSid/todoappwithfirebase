@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
 import Button from "./Button";
 import { TodoContext } from "../context/todos-context";
+import Select from "react-select";
+import customStyles from "../utils/styles";
+import { filterOptions } from "../utils/styles";
 
 export default function FilterModal() {
   const styles =
     "bg-[#29303d] hover:bg-[#29305d] font-bold rounded py-2 px-4 text-white mx-2";
-  const { closeModal } = useContext(TodoContext);
+  const { closeModal, modalFilterChange, filterTodos } =
+    useContext(TodoContext);
 
   return (
     <div className="w-screen h-screen z-[1000] fixed left-0 top-0 flex items-center justify-center opacity-100 bg-opacity-50 bg-gray-800 ">
@@ -17,21 +21,19 @@ export default function FilterModal() {
                 Filter Todos
               </h1>
             </div>
-            <div className="mb-12">
-              <select
-                name="Filter"
-                defaultValue="Filter"
-                className="rounded-md bg-[#29303d] focus:outline-none px-5 py-1 cursor-pointer"
-              >
-                <option value="All">All</option>
-                <option value="Not started">Not started</option>
-                <option value="In progress">In progress</option>
-                <option value="Skipped">Skipped</option>
-                <option value="Done">Done</option>
-              </select>
+            <div className="mb-12 text-[#697a94]">
+              <Select
+                options={filterOptions}
+                styles={customStyles}
+                isSearchable={false}
+                defaultValue={filterOptions[0]}
+                onChange={modalFilterChange}
+              />
             </div>
             <div>
-              <Button className={styles}>Filter</Button>
+              <Button className={styles} onClick={filterTodos}>
+                Filter
+              </Button>
               <Button onClick={closeModal} className={styles}>
                 Cancel
               </Button>

@@ -10,6 +10,7 @@ import { TodoContext } from "../context/todos-context";
 
 export default function TodoItem({ todo }) {
   const { dateChange, selectedDates } = useContext(TodoContext);
+
   return (
     <>
       <tr key={todo.id}>
