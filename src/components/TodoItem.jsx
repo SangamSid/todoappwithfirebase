@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { TodoContext } from "../context/todos-context";
 
 export default function TodoItem({ todo }) {
-  const { dateChange, selectedDates } = useContext(TodoContext);
+  const { dateChange, selectedDates, selectChange } = useContext(TodoContext);
 
   return (
     <>
@@ -21,6 +21,7 @@ export default function TodoItem({ todo }) {
             styles={customStyles}
             isSearchable={false}
             defaultValue={options[0]}
+            onChange={selectChange}
           />
         </td>
         <td>

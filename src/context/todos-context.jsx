@@ -1,8 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Button from "../components/Button";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { options } from "../utils/styles";
 
 export const TodoContext = createContext({
   todos: [],
@@ -25,6 +26,7 @@ export const TodoContext = createContext({
   setTaskName: () => {},
   setEditedTask: () => {},
   modalIsFiltering: () => {},
+  selectChange: () => {},
 });
 
 const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
@@ -40,14 +42,30 @@ export default function TodoContextProvider({ children }) {
   const [taskName, setTaskName] = useState("");
   const [editedTask, setEditedTask] = useState("");
   const [isFiltering, setIsFiltering] = useState(false);
+  const [todoStatus, setTodoStatus] = useState(options[0].value);
 
   function modalIsFiltering() {
     setIsFiltering(true);
+    console.log(todos);
+  }
+
+  // Missing filtering function
+
+  function selectChange(selectedOption) {
+    // selectedOption -> string from a selected option from the task itself
+    setTodoStatus(selectedOption.value);
+
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === todoId ? { ...todo, status: selectedOption.value } : todo
+      )
+    );
   }
 
   const todoObj = {
     id: todoId,
     task: taskName,
+    status: todoStatus,
     date: new Date(),
     action: (
       <>
@@ -74,6 +92,7 @@ export default function TodoContextProvider({ children }) {
   function addTodo() {
     setTodos([...todos, todoObj]);
     closeModal();
+    console.log(todos, todoObj);
   }
 
   function removeTodo(todo) {
@@ -85,7 +104,6 @@ export default function TodoContextProvider({ children }) {
     setModalOpen(true);
     setTodoId(todoObj.id);
     setEditedTask(todoObj.task);
-    console.log(todoObj.id);
   }
 
   function editTask(todoId, editedTask) {
@@ -132,6 +150,7 @@ export default function TodoContextProvider({ children }) {
     setTaskName,
     setEditedTask,
     modalIsFiltering,
+    selectChange,
   };
 
   return (
