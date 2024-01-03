@@ -92,6 +92,9 @@ export default function TodoContextProvider({ children }) {
 
   function removeTodo() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+    setCompletedTodos((prevTodos) =>
+      prevTodos.filter((todo) => todo.id !== todoId)
+    );
     console.log(todos);
   }
 
