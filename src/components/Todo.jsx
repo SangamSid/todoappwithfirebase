@@ -3,38 +3,55 @@ import TodoItem from "./TodoItem";
 import Modal from "./Modal";
 import { TodoContext } from "../context/todos-context";
 import { useContext } from "react";
-import FilterModal from "./FilterModal";
 
 export default function Todo() {
-  const { todos, modalOpen, isEditing, isFiltering } = useContext(TodoContext);
+  const { todos, modalOpen, isEditing, toggleComplete, completedTodos } =
+    useContext(TodoContext);
 
   return (
-    // <div className="m-auto container max-w-2xl">
     <div className="m-auto container max-w-2xl">
-      {modalOpen && <Modal key="add" title="Add Task"></Modal>}
-      <div className="my-5">
-        <table className="rounded-md p-7 bg-slate-200">
-          <thead>
-            <tr>
-              <th>TASK</th>
-              <th>STATUS</th>
-              <th>DUE DATE</th>
-              <th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="m-auto container max-w-2xl">
+        {modalOpen && <Modal title="Add Task"></Modal>}
+        <div className="my-10">
+          {todos.length > 0 && (
+            <>
+              <div className="text-lg text-cyan-950">
+                <p>Pending Todos</p>
+              </div>
+              <div className="border border-[#29303d] mb-2 bg-[#29303d]"></div>
+            </>
+          )}
+          <ul className="rounded-md p-7 bg-slate-200">
+            {todos.length === 0 && (
+              <p className="text-center text-lg">NO TASKS</p>
+            )}
             {todos.map((todo) => (
               <TodoItem key={todo.id} todo={todo} />
             ))}
-          </tbody>
-        </table>
-        {isEditing && modalOpen && <Modal key="edit" title="Edit Task" />}
-        {todos.length === 0 && (
-          <div className="w-full h-10 bg-[#1e293b] text-[#697a94] flex items-center">
-            <p className="text-center text-lg m-auto">NO TODOS</p>
-          </div>
-        )}
-        {isFiltering && <FilterModal></FilterModal>}
+            {isEditing && modalOpen && <Modal title="Edit Task" />}
+          </ul>
+          {completedTodos.length > 0 ? (
+            <>
+              <div className="text-lg text-cyan-950 mt-4">
+                <p>Completed Tasks</p>
+              </div>
+              <div className="border border-[#29303d] mb-2 bg-[#29303d]"></div>
+              <ul className="rounded-md p-7 bg-green-200">
+                {completedTodos.length === 0 && (
+                  <p className="text-center text-lg">NO COMPLETED TASKS</p>
+                )}
+                {completedTodos.map((todo) => (
+                  <TodoItem
+                    key={todo.id}
+                    todo={todo}
+                    removeTodo={() => removeTodo(index)}
+                    toggleComplete={() => toggleComplete(index)}
+                  />
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </div>
       </div>
     </div>
   );

@@ -1,41 +1,42 @@
-import React from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker-cssmodules.css";
-import Select from "react-select";
-import customStyles from "../utils/styles";
-import { options } from "../utils/styles";
+import { useState } from "react";
+import Button from "./Button";
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+import { RiCheckboxBlankCircleFill } from "react-icons/ri";
+import { date } from "../utils/date";
+
 import { useContext } from "react";
 import { TodoContext } from "../context/todos-context";
 
-export default function TodoItem({ todo }) {
-  const { dateChange, selectedDates, selectChange } = useContext(TodoContext);
+export default function TodoItem({ todo, timestamp }) {
+  const formattedTimestamp = timestamp ? timestamp : date();
+
+  const { toggleComplete } = useContext(TodoContext);
 
   return (
     <>
-      <tr key={todo.id}>
-        <td>{todo.task}</td>
-        <td>
-          <Select
-            options={options}
-            styles={customStyles}
-            isSearchable={false}
-            defaultValue={options[0]}
-            onChange={selectChange}
-          />
-        </td>
-        <td>
-          <DatePicker
-            selected={selectedDates.id}
-            onChange={(date) => dateChange(todo.id, date)}
-            className="focus:outline-none w-40 h-8 bg-[#1e293b] ml-1"
-            showIcon
-            toggleCalendarOnIconClick
-            dateFormat="dd/MM/yyyy"
-          ></DatePicker>
-        </td>
-        <td>{todo.action}</td>
-      </tr>
+      <li
+        key={todo.id}
+        className={`rounded-md p-5 mb-1 w-full flex items-center justify-between ${
+          todo.completed ? "bg-slate-400" : "bg-[#758aac]"
+        }`}
+      >
+        <div className="text-white flex">
+          <div className="flex items-center mr-2 cursor-pointer">
+            <input
+              className="cursor-pointer"
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => toggleComplete()}
+            />
+          </div>
+          <div>
+            {todo.name}
+            <p className="text-xs">{formattedTimestamp}</p>
+          </div>
+        </div>
+        <div className="flex space-x-1">{todo.action}</div>
+      </li>
     </>
   );
 }

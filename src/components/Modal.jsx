@@ -12,12 +12,12 @@ export default function Modal({ title }) {
     closeModal,
     editTask,
     isEditing,
-    todoId,
     todos,
     editedTask,
     setEditedTask,
-    setTodoId,
     setTaskName,
+    todoId,
+    setTodoId,
   } = useContext(TodoContext);
 
   const inputValue = useRef();
@@ -44,7 +44,6 @@ export default function Modal({ title }) {
   function handleEditTask(e) {
     e.preventDefault();
     editTask(todoId, editedTask);
-    console.log(todos);
   }
 
   return (

@@ -9,23 +9,3 @@
       sans-serif, sans-serif;
   }
 }
-
-td {
-  text-align: center;
-
-  height: 40px;
-  border: 1px solid #3d4b5f;
-  background-color: #1e293b;
-  color: #697a94;
-}
-
-th {
-  width: 200px;
-  border: 1px solid #3d4b5f;
-  background-color: #334155;
-  color: white;
-}
-
-option {
-  text-align: left;
-}

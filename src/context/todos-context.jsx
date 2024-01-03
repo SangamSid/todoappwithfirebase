@@ -1,18 +1,16 @@
 import { createContext, useState } from "react";
+import { date } from "../utils/date";
 import { v4 as uuidv4 } from "uuid";
 import Button from "../components/Button";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import { options } from "../utils/styles";
 
 export const TodoContext = createContext({
   todos: [],
   modalOpen: false,
   isEditing: false,
-  isFiltering: false,
   taskName: "",
   editedTask: "",
-  selectedDates: {},
   addTodo: () => {},
   removeTodo: () => {},
   editTask: () => {},
@@ -26,57 +24,36 @@ export const TodoContext = createContext({
   setTaskName: () => {},
   setEditedTask: () => {},
   modalIsFiltering: () => {},
-  selectChange: () => {},
+  toggleComplete: () => {},
 });
-
-const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
 export default function TodoContextProvider({ children }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [todos, setTodos] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedDates, setSelectedDates] = useState({
-    id: new Date(),
-  });
   const [todoId, setTodoId] = useState(uuidv4());
+  const [isEditing, setIsEditing] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [editedTask, setEditedTask] = useState("");
-  const [isFiltering, setIsFiltering] = useState(false);
-  const [todoStatus, setTodoStatus] = useState(options[0].value);
+  const [completedTodos, setCompletedTodos] = useState([]);
 
-  function modalIsFiltering() {
-    setIsFiltering(true);
-    console.log(todos);
-  }
+  const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
-  // Missing filtering function
+  const toggleComplete = () => {
+    setTodos((prevTodos) => {
+      const updatedTodos = prevTodos.map((todo) =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+      );
 
-  function selectChange(selectedOption) {
-    // selectedOption -> string from a selected option from the task itself
-    setTodoStatus(selectedOption.value);
+      const completedTask = updatedTodos.find((todo) => todo.completed);
+      if (completedTask) {
+        const remainingTodos = updatedTodos.filter((todo) => !todo.completed);
+        setCompletedTodos([...completedTodos, completedTask]);
+        return remainingTodos;
+      }
 
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === todoId ? { ...todo, status: selectedOption.value } : todo
-      )
-    );
-  }
-
-  const todoObj = {
-    id: todoId,
-    task: taskName,
-    status: todoStatus,
-    date: new Date(),
-    action: (
-      <>
-        <Button onClick={removeTodo} className={styles}>
-          <MdDelete />
-        </Button>
-        <Button onClick={modalIsEditing} className={styles}>
-          <FaEdit />
-        </Button>
-      </>
-    ),
+      setCompletedTodos([]);
+      return updatedTodos;
+    });
   };
 
   function openModal() {
@@ -86,31 +63,50 @@ export default function TodoContextProvider({ children }) {
   function closeModal() {
     setModalOpen(false);
     setIsEditing(false);
-    setIsFiltering(false);
   }
+
+  const newTodo = {
+    id: todoId,
+    name: taskName,
+    timestamp: date(),
+    completed: false,
+    action: (
+      <>
+        <Button onClick={removeTodo} className={styles}>
+          <MdDelete />
+        </Button>
+        {completedTodos > 0 ? null : (
+          <Button onClick={modalIsEditing} className={styles}>
+            <FaEdit />
+          </Button>
+        )}
+      </>
+    ),
+  };
 
   function addTodo() {
-    setTodos([...todos, todoObj]);
+    setTodos([...todos, newTodo]);
+    console.log(todos);
     closeModal();
-    console.log(todos, todoObj);
   }
 
-  function removeTodo(todo) {
-    setTodos(todos.filter((t) => t.id !== todo.id));
+  function removeTodo() {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));
+    console.log(todos);
   }
 
   function modalIsEditing() {
     setIsEditing(true);
     setModalOpen(true);
-    setTodoId(todoObj.id);
-    setEditedTask(todoObj.task);
+    setTodoId(newTodo.id);
+    setEditedTask(newTodo.name);
   }
 
   function editTask(todoId, editedTask) {
     console.log("Editing todo with id:", todoId);
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === todoId ? { ...todo, task: editedTask } : todo
+        todo.id === todoId ? { ...todo, name: editedTask } : todo
       )
     );
     setIsEditing(false);
@@ -121,21 +117,14 @@ export default function TodoContextProvider({ children }) {
     setTodos([]);
   }
 
-  function dateChange(taskId, date) {
-    setSelectedDates({
-      ...selectedDates,
-      [taskId]: date,
-    });
-  }
-
   const ctxValue = {
     todos,
     modalOpen,
     isEditing,
-    isFiltering,
     taskName,
     editedTask,
-    selectedDates,
+    completedTodos,
+    todoId,
     addTodo,
     removeTodo,
     editTask,
@@ -143,14 +132,11 @@ export default function TodoContextProvider({ children }) {
     removeAllTodos,
     openModal,
     closeModal,
-    dateChange,
     setTodos,
-    todoId,
-    setTodoId,
     setTaskName,
     setEditedTask,
-    modalIsFiltering,
-    selectChange,
+    toggleComplete,
+    setTodoId,
   };
 
   return (

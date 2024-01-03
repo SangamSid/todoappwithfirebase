@@ -28,9 +28,6 @@ export default function Header() {
             </Button>
             {todos.length > 0 && (
               <>
-                <Button className={styles} onClick={modalIsFiltering}>
-                  Filter
-                </Button>
                 <Button onClick={removeAllTodos} className={styles}>
                   Delete All
                 </Button>
