@@ -5,7 +5,7 @@ import { TodoContext } from "../context/todos-context";
 import { useContext } from "react";
 
 export default function Todo() {
-  const { todos, modalOpen, isEditing, toggleComplete, completedTodos } =
+  const { todos, modalOpen, isEditing, completedTodos } =
     useContext(TodoContext);
 
   return (
@@ -36,17 +36,12 @@ export default function Todo() {
                 <p>Completed Tasks</p>
               </div>
               <div className="border border-[#29303d] mb-2 bg-[#29303d]"></div>
-              <ul className="rounded-md p-7 bg-green-200">
+              <ul className="rounded-md p-7 bg-slate-200">
                 {completedTodos.length === 0 && (
                   <p className="text-center text-lg">NO COMPLETED TASKS</p>
                 )}
                 {completedTodos.map((todo) => (
-                  <TodoItem
-                    key={todo.id}
-                    todo={todo}
-                    removeTodo={() => removeTodo(index)}
-                    toggleComplete={() => toggleComplete(index)}
-                  />
+                  <TodoItem key={todo.id} todo={todo} />
                 ))}
               </ul>
             </>

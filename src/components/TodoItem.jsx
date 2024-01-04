@@ -11,20 +11,22 @@ import { TodoContext } from "../context/todos-context";
 export default function TodoItem({ todo, timestamp }) {
   const formattedTimestamp = timestamp ? timestamp : date();
 
-  const { toggleComplete } = useContext(TodoContext);
+  const { toggleComplete, todoId } = useContext(TodoContext);
 
   return (
     <>
       <li
         key={todo.id}
-        className={`rounded-md p-5 mb-1 w-full flex items-center justify-between ${
-          todo.completed ? "bg-slate-400" : "bg-[#758aac]"
+        className={`transition duration-150 ease-in-out rounded-md p-5 mb-1 w-full flex items-center justify-between ${
+          todo.completed
+            ? "bg-slate-400 opacity-40 line-through"
+            : "bg-[#758aac]"
         }`}
       >
         <div className="text-white flex">
-          <div className="flex items-center mr-2 cursor-pointer">
+          <div className="flex items-center mr-2">
             <input
-              className="cursor-pointer"
+              className="form-checkbox cursor-pointer"
               type="checkbox"
               checked={todo.completed}
               onChange={() => toggleComplete()}
