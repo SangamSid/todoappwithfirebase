@@ -24,7 +24,7 @@ export const TodoContext = createContext({
   setTaskName: () => {},
   setEditedTask: () => {},
   modalIsFiltering: () => {},
-  toggleComplete: () => {},
+  moveToCompleted: () => {},
 });
 
 export default function TodoContextProvider({ children }) {
@@ -38,21 +38,31 @@ export default function TodoContextProvider({ children }) {
 
   const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
-  const toggleComplete = () => {
+  const moveToCompleted = (todoId) => {
     setTodos((prevTodos) => {
       const updatedTodos = prevTodos.map((todo) =>
-        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
+        todo.id === todoId ? { ...todo, completed: true } : todo
       );
 
-      const completedTask = updatedTodos.find((todo) => todo.completed);
+      const completedTask = updatedTodos.find(
+        (todo) => todo.id === todoId && todo.completed
+      );
+
       if (completedTask) {
-        const remainingTodos = updatedTodos.filter((todo) => !todo.completed);
-        setCompletedTodos([...completedTodos, completedTask]);
-        return remainingTodos;
+        setCompletedTodos((prevCompletedTodos) => {
+          // Check if the task is already in completedTodos array
+          const isTaskInCompleted = prevCompletedTodos.some(
+            (todo) => todo.id === completedTask.id
+          );
+
+          // Add the task only if it's not already in completedTodos (If variable isTaskInCompleted is false)
+          return isTaskInCompleted
+            ? prevCompletedTodos
+            : [...prevCompletedTodos, completedTask];
+        });
       }
 
-      setCompletedTodos([]);
-      return updatedTodos;
+      return updatedTodos.filter((todo) => !todo.completed);
     });
   };
 
@@ -138,7 +148,7 @@ export default function TodoContextProvider({ children }) {
     setTodos,
     setTaskName,
     setEditedTask,
-    toggleComplete,
+    moveToCompleted,
     setTodoId,
   };
 

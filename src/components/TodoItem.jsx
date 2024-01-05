@@ -11,7 +11,7 @@ import { TodoContext } from "../context/todos-context";
 export default function TodoItem({ todo, timestamp }) {
   const formattedTimestamp = timestamp ? timestamp : date();
 
-  const { toggleComplete, todoId } = useContext(TodoContext);
+  const { moveToCompleted, todoId } = useContext(TodoContext);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function TodoItem({ todo, timestamp }) {
               className="form-checkbox cursor-pointer"
               type="checkbox"
               checked={todo.completed}
-              onChange={() => toggleComplete()}
+              onChange={() => moveToCompleted(todo.id)}
             />
           </div>
           <div>
