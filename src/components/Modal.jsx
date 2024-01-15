@@ -12,7 +12,6 @@ export default function Modal({ title }) {
     closeModal,
     editTask,
     isEditing,
-    todos,
     editedTask,
     setEditedTask,
     setTaskName,

@@ -9,7 +9,7 @@ export default function Header() {
   const center = "flex justify-center";
   const between = "flex justify-between";
 
-  const { todos, removeAllTodos, openModal, modalIsFiltering } =
+  const { todos, removeAllTodos, openModal, completedTodos } =
     useContext(TodoContext);
 
   return (
@@ -22,17 +22,19 @@ export default function Header() {
             </span>
             <h1>TODO LIST</h1>
           </div>
-          <div className={todos.length > 0 ? between : center}>
+          <div
+            className={
+              todos.length > 0 || completedTodos.length > 0 ? between : center
+            }
+          >
             <Button onClick={openModal} className={styles}>
               Add Todo
             </Button>
-            {todos.length > 0 && (
-              <>
-                <Button onClick={removeAllTodos} className={styles}>
-                  Delete All
-                </Button>
-              </>
-            )}
+            {todos.length > 0 || completedTodos.length > 0 ? (
+              <Button onClick={removeAllTodos} className={styles}>
+                Delete All
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>

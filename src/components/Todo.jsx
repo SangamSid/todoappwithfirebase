@@ -37,9 +37,6 @@ export default function Todo() {
               </div>
               <div className="border border-[#29303d] mb-2 bg-[#29303d]"></div>
               <ul className="rounded-md p-7 bg-slate-200">
-                {completedTodos.length === 0 && (
-                  <p className="text-center text-lg">NO COMPLETED TASKS</p>
-                )}
                 {completedTodos.map((todo) => (
                   <TodoItem key={todo.id} todo={todo} />
                 ))}

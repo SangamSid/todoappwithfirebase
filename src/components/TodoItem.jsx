@@ -1,17 +1,16 @@
-import { useState } from "react";
 import Button from "./Button";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import { RiCheckboxBlankCircleFill } from "react-icons/ri";
 import { date } from "../utils/date";
 
 import { useContext } from "react";
 import { TodoContext } from "../context/todos-context";
 
-export default function TodoItem({ todo, timestamp }) {
-  const formattedTimestamp = timestamp ? timestamp : date();
+export default function TodoItem({ todo }) {
+  const styles = "border-1 rounded-md bg-slate-100 px-3 py-1 m-1 end-0";
 
-  const { moveToCompleted, todoId } = useContext(TodoContext);
+  const { moveToCompleted, removeTodo, modalIsEditing } =
+    useContext(TodoContext);
 
   return (
     <>
@@ -34,10 +33,26 @@ export default function TodoItem({ todo, timestamp }) {
           </div>
           <div>
             {todo.name}
-            <p className="text-xs">{formattedTimestamp}</p>
+            <p className="text-xs">{todo.timestamp}</p>
           </div>
         </div>
-        <div className="flex space-x-1">{todo.action}</div>
+        <div className="flex space-x-1">
+          {!todo.completed && (
+            <>
+              <Button onClick={() => removeTodo(todo)} className={styles}>
+                <MdDelete />
+              </Button>
+              <Button onClick={() => modalIsEditing(todo)} className={styles}>
+                <FaEdit />
+              </Button>
+            </>
+          )}
+          {todo.completed && (
+            <Button onClick={() => removeTodo(todo)} className={styles}>
+              <MdDelete />
+            </Button>
+          )}
+        </div>
       </li>
     </>
   );
