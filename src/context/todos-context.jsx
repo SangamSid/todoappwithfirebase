@@ -2,6 +2,14 @@ import { createContext, useState } from "react";
 import { date } from "../utils/date";
 import { v4 as uuidv4 } from "uuid";
 
+import "firebase/firestore";
+import firebaseConfig from "../firebaseConfig.js";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 export const TodoContext = createContext({
   todos: [],
   modalOpen: false,
@@ -22,6 +30,7 @@ export const TodoContext = createContext({
   setEditedTask: () => {},
   modalIsFiltering: () => {},
   moveToCompleted: () => {},
+  getDataFromFirebase: () => {},
 });
 
 export default function TodoContextProvider({ children }) {
@@ -42,7 +51,7 @@ export default function TodoContextProvider({ children }) {
     setIsEditing(false);
   }
 
-  function addTodo() {
+  async function addTodo() {
     const timestamp = date();
     const newTodo = {
       id: todoId,
@@ -50,8 +59,28 @@ export default function TodoContextProvider({ children }) {
       timestamp: timestamp,
       completed: false,
     };
-    setTodos([...todos, newTodo]);
-    closeModal();
+
+    try {
+      await addDoc(collection(db, "added items"), newTodo);
+      setTodos([...todos, newTodo]);
+      closeModal();
+    } catch (error) {
+      console.error("Error during adding a task in Firestore.");
+    }
+  }
+
+  async function getDataFromFirebase() {
+    try {
+      const snapshot = await getDocs(collection(db, "added items"));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      if (data.length === 0) {
+        alert("No recently added todos!");
+      } else {
+        setTodos([...data]);
+      }
+    } catch (error) {
+      console.error("Error during fetching data from Firestore: ", error);
+    }
   }
 
   function removeTodo(todo) {
@@ -134,6 +163,7 @@ export default function TodoContextProvider({ children }) {
     setEditedTask,
     moveToCompleted,
     setTodoId,
+    getDataFromFirebase,
   };
 
   return (

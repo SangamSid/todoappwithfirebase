@@ -1,5 +1,5 @@
 import Button from "./Button";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { TodoContext } from "../context/todos-context";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 
@@ -9,8 +9,13 @@ export default function Header() {
   const center = "flex justify-center";
   const between = "flex justify-between";
 
-  const { todos, removeAllTodos, openModal, completedTodos } =
-    useContext(TodoContext);
+  const {
+    todos,
+    removeAllTodos,
+    openModal,
+    completedTodos,
+    getDataFromFirebase,
+  } = useContext(TodoContext);
 
   return (
     <>
@@ -30,6 +35,11 @@ export default function Header() {
             <Button onClick={openModal} className={styles}>
               Add Todo
             </Button>
+            {todos.length === 0 && completedTodos.length === 0 ? (
+              <Button onClick={getDataFromFirebase} className={styles}>
+                Added Todos
+              </Button>
+            ) : null}
             {todos.length > 0 || completedTodos.length > 0 ? (
               <Button onClick={removeAllTodos} className={styles}>
                 Delete All
