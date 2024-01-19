@@ -5,7 +5,15 @@ import { v4 as uuidv4 } from "uuid";
 import "firebase/firestore";
 import firebaseConfig from "../firebaseConfig.js";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -61,7 +69,7 @@ export default function TodoContextProvider({ children }) {
     };
 
     try {
-      await addDoc(collection(db, "added items"), newTodo);
+      await setDoc(doc(db, "added items", todoId), newTodo);
       setTodos([...todos, newTodo]);
       closeModal();
     } catch (error) {
@@ -83,12 +91,29 @@ export default function TodoContextProvider({ children }) {
     }
   }
 
-  function removeTodo(todo) {
+  async function removeTodo(todo) {
+    try {
+      const docRef = doc(db, "added items", todo.id);
+      await deleteDoc(docRef);
+      console.log("Document has been deleted successfully.");
+    } catch (error) {
+      console.error("Error during deleting task from Firestore: ", error);
+    }
     setTodos((prevTodos) => prevTodos.filter((t) => t.id !== todo.id));
     setCompletedTodos((prevTodos) => prevTodos.filter((t) => t.id !== todo.id));
   }
 
-  function removeAllTodos() {
+  async function removeAllTodos() {
+    try {
+      const colRef = collection(db, "added items");
+      const docsSnapshot = await getDocs(colRef);
+      docsSnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+      console.log("All tasks have been deleted successfully.");
+    } catch (error) {
+      console.error("Error during deleting tasks from Firestore: ", error);
+    }
     setTodos([]);
     setCompletedTodos([]);
   }
@@ -100,7 +125,17 @@ export default function TodoContextProvider({ children }) {
     setEditedTask(todo.name);
   }
 
-  function editTask(todoId, editedTask) {
+  async function editTask(todoId, editedTask) {
+    try {
+      const data = {
+        name: editedTask,
+      };
+      const docRef = doc(db, "added items", todoId);
+      await updateDoc(docRef, data);
+    } catch (error) {
+      console.error("There has been an error updating your todo!", error);
+    }
+
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === todoId ? { ...todo, name: editedTask } : todo
